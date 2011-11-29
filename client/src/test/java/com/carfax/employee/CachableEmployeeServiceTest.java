@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import net.sf.ehcache.CacheManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,10 +25,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class CachableEmployeeServiceTest {
 	@Autowired
 	EmployeeServiceContract cacheableEmployeeService;
+	@Autowired
+	CacheManager cacheManager;
 	
 	EmployeeServiceContract underlyingService;
 	@Before
 	public void before() throws Exception{
+		cacheManager.clearAll();
 		underlyingService = mock(EmployeeServiceContract.class);
 		Advised proxiedObject = (Advised)cacheableEmployeeService;
 		CachableEmployeeService target = (CachableEmployeeService)proxiedObject.getTargetSource().getTarget();
@@ -34,10 +39,19 @@ public class CachableEmployeeServiceTest {
 	}
 	@Test
 	public void shouldCacheSecondResult() throws Exception{
-		List<Employee> employees1 = cacheableEmployeeService.list();
-		List<Employee> employees2 = cacheableEmployeeService.list();
+		cacheableEmployeeService.list();
+		cacheableEmployeeService.list();
 		
 		verify(underlyingService, times(1)).list();
+	}
+	
+	@Test
+	public void shouldEvictCacheWhenSomethingHasBeenAdded() throws Exception{
+		cacheableEmployeeService.list();
+		cacheableEmployeeService.add("James", "Carr");
+		cacheableEmployeeService.list();
+		
+		verify(underlyingService, times(2)).list();
 	}
 	
 	
