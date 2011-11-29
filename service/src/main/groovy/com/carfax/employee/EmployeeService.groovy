@@ -21,7 +21,7 @@ public class EmployeeService implements EmployeeServiceContract{
 		return employees.getAll();
 	}
 	
-	public Employee list(String firstName, String lastName){
+	public Employee add(String firstName, String lastName){
 		if(firstName != null & lastName != null){
 			Employee employee = new Employee(firstName:firstName, lastName:lastName);
 			employees.save(employee);

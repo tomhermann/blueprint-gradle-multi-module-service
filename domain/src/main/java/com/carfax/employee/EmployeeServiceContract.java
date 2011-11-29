@@ -17,5 +17,5 @@ public interface EmployeeServiceContract {
 	@GET
 	@Path("/add")
 	@Produces("application/json")
-	public Employee list(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName);
+	public Employee add(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName);
 }
