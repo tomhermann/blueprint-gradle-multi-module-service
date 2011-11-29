@@ -1,0 +1,63 @@
+apply plugin: 'groovy'
+apply plugin: 'jetty'
+
+
+
+dependencies {
+  groovy 'org.codehaus.groovy:groovy-all:1.8.2'
+
+  compile project(":domain")
+  // dependencies for spring mvc
+  compile "org.springframework:spring-webmvc:$springVersion"
+  compile "org.springframework:spring-jdbc:$springVersion"
+  compile "org.jboss.resteasy:resteasy-jaxrs:$restEasyVersion"
+  
+  compile "org.jboss.resteasy:resteasy-spring:$restEasyVersion"
+  compile "org.jboss.resteasy:resteasy-jackson-provider:$restEasyVersion"
+  compile 'cglib:cglib:2.2.2'
+
+  // json support
+  compile 'org.codehaus.jackson:jackson-mapper-asl:1.8.3'
+  
+  // slf4j so we can have some awesome logging
+  compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+  compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+  runtime "log4j:log4j:$log4jVersion"
+  
+  // runtime dependency on h2 so jetty can load it into jndi
+  providedRuntime "com.h2database:h2:$h2Version"
+  providedRuntime 'commons-dbcp:commons-dbcp:1.4'
+}
+
+/**
+* Build script depedency on h2 so that
+* we can initialize the H2 server on startup
+*/
+buildscript {
+   repositories {
+	   mavenCentral()
+   }
+   dependencies {
+	   classpath "com.h2database:h2:$h2Version"
+   }
+}
+
+/**
+ * Configure jettyRun, jettyRunWar and jettyStop tasks.
+ */
+[jettyRun, jettyRunWar,jettyStop]*.with {
+  jettyEnvXml = file('src/test/resources/jetty-env.xml')
+  httpPort = 8222
+  stopPort = 19742
+}
+
+/** 
+ * Run the h2 server before jetty starts up
+ */
+[jettyRun, jettyRunWar]*.doFirst {
+	def moduleDir = file('.').absolutePath
+	org.h2.tools.Server.main "-tcp -web".split(' ')
+	org.h2.tools.RunScript.main "-script $moduleDir/src/test/resources/create.sql -url jdbc:h2:tcp://localhost/test".split(' ')
+	
+	println "H2 TCP server is running! Browse to http://172.18.11.60:8082 and connect to jdbc:h2:tcp://localhost/test"
+}

@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+
+dependencies {
+	compile project(':domain')
+	
+	compile "org.springframework:spring-webmvc:$springVersion"
+	compile "org.springframework:spring-jdbc:$springVersion"
+	compile "org.jboss.resteasy:resteasy-jaxrs:$restEasyVersion"
+	compile "org.jboss.resteasy:resteasy-jackson-provider:$restEasyVersion"
+	
+	compile "org.jboss.resteasy:resteasy-spring:$restEasyVersion"
+	
+	runtime "net.sf.ehcache:ehcache-core:2.5.0"
+	
+	testCompile "org.springframework:spring-test:$springVersion"
+	testCompile "org.mockito:mockito-all:1.8.5"
+}
+
