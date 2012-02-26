@@ -11,21 +11,20 @@ import org.jboss.resteasy.annotations.cache.ServerCached;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class EmployeeService implements EmployeeServiceContract{
 	@Autowired
-	private EmployeeDAO employees;
+	private EmployeeJdbcRepository employees;
 
 	public List<Employee> list(){
 		return employees.getAll();
 	}
-	
+
 	public Employee add(String firstName, String lastName){
 		if(firstName != null & lastName != null){
 			Employee employee = new Employee(firstName:firstName, lastName:lastName);
 			employees.save(employee);
-			return employee;			
+			return employee;
 		}
 		return null;
 	}

@@ -1,16 +1,19 @@
-
 subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
     
-
     repositories {
-        mavenRepo urls: 'http://resolver/all'
+        
+        mavenCentral()
+
+        
+        maven {
+            url 'https://repository.jboss.org/nexus/content/repositories/thirdparty-releases'
+        }
     }
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
     }
-
 }

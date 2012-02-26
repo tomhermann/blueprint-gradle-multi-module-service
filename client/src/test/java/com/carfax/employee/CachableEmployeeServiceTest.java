@@ -3,13 +3,6 @@ package com.carfax.employee;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import net.sf.ehcache.CacheManager;
 
 import org.junit.Before;

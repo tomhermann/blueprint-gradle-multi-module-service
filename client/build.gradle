@@ -12,8 +12,7 @@ dependencies {
 	compile "org.jboss.resteasy:resteasy-spring:$restEasyVersion"
 	
 	runtime "net.sf.ehcache:ehcache-core:2.5.0"
-	
+	testCompile "net.sf.ehcache:ehcache-core:2.5.0"
 	testCompile "org.springframework:spring-test:$springVersion"
 	testCompile "org.mockito:mockito-all:1.8.5"
 }
-
